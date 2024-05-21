@@ -1,0 +1,10 @@
+pandas
+wordcloud
+tensorflow==2.16.1
+sastrawi
+nltk
+matplotlib
+huggingface 
+transformers 
+seaborn
+emoji

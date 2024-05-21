@@ -24,6 +24,9 @@ nltk.download('wordnet')
 
 st.title('Sentiment Analysis App Titipku')
 
+url = "https://scrapping-app-review.streamlit.app/"
+st.write("Follow this [link](%s) to scrapping data" % url)
+
 upload_file = st.file_uploader("Upload a CSV File", type="csv")
 added_stopwords = st.text_input("Enter Add Stopword (comma-separated)")
 added_stopword_list = [word.strip() for word in added_stopwords.split(",")] if added_stopwords else []

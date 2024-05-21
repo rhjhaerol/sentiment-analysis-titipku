@@ -18,6 +18,10 @@ from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFacto
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification 
 TF_ENABLE_ONEDNN_OPTS=0
 
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 st.title('Sentiment Analysis App Titipku')
 
 upload_file = st.file_uploader("Upload a CSV File", type="csv")

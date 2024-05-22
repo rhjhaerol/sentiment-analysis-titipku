@@ -5,6 +5,7 @@ import numpy as np
 import json, os, uuid
 import streamlit as st
 
+st.set_page_config(page_title="Scrapper App Review")
 st.title("App Review Scrapper")
 
 st.write("The app link is highlighted in yellow")

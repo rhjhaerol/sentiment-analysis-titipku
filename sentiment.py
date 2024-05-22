@@ -31,6 +31,7 @@ if upload_file is not None:
     df = pd.read_csv(upload_file)
     st.subheader('Preview Dataset')
     st.dataframe(df)
+
     object_columns = df.select_dtypes(include="object").columns
     target_variable = st.selectbox("Choose a column for Sentiment Analysis:", object_columns)
 
@@ -114,17 +115,6 @@ if upload_file is not None:
             "Negative": ""
         }
 
-        # Loop through each sentiment label
-        for label in sentiment_counts.index:
-            # Filter data for the current sentiment
-            selected_data = data[data['label'] == label]
-
-            # Include custom stopwords back into the cleaned text before concatenation
-            selected_data['cleaned_text'] = selected_data['cleaned_text'].apply(lambda x: ' '.join([word for word in x.split()]))
-
-            # Concatenate cleaned text from the selected data (now including custom stopwords)
-            sentiment_text[label] = ' '.join(selected_data['cleaned_text'].astype(str))
-
         # Concatenate cleaned text for each sentiment
         positive_text = ' '.join([word for word in data[data['label'] == 'Positive']['cleaned_text'].apply(lambda x: ' '.join([w for w in x.split()]))])
         neutral_text = ' '.join([word for word in data[data['label'] == 'Neutral']['cleaned_text'].apply(lambda x: ' '.join([w for w in x.split()]))])
@@ -141,7 +131,7 @@ if upload_file is not None:
         positive_wordcloud.to_file(positive_wordcloud_filename)
 
         # Display the saved WordCloud image using Streamlit
-        st.subheader("WordCloud for Positive Sentiment")
+        st.subheader("WordCloud For Positive Sentiment")
         st.image(positive_wordcloud_filename)
 
         # Generate WordCloud for negative sentiment
@@ -155,7 +145,7 @@ if upload_file is not None:
         negative_wordcloud.to_file(negative_wordcloud_filename)
 
         # Display the saved WordCloud image using Streamlit
-        st.subheader("WordCloud for Negative Sentiment")
+        st.subheader("WordCloud For Negative Sentiment")
         st.image(negative_wordcloud_filename)
 
         # Generate WordCloud for neutral sentiment
@@ -169,5 +159,5 @@ if upload_file is not None:
         neutral_wordcloud.to_file(neutral_wordcloud_filename)
 
         # Display the saved WordCloud image using Streamlit
-        st.subheader("WordCloud for Neutral Sentiment")
+        st.subheader("WordCloud For Neutral Sentiment")
         st.image(neutral_wordcloud_filename)

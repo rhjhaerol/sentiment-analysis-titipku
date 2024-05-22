@@ -44,7 +44,8 @@ if upload_file is not None:
         stopwords_indonesian = stop_factory.get_stop_words() + more_stopword
 
         st.success(f"Sentiment Analysis performed on column: {target_variable}")
-
+        
+        df = df.dropna(how='any',axis=0)
         st.write(f"Selected {target_variable} Column:")
         st.dataframe(df[[target_variable]])
 

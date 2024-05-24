@@ -17,14 +17,14 @@ TF_ENABLE_ONEDNN_OPTS=0
 nltk.download('punkt')
 nltk.download('wordnet')
 
-st.set_page_config(page_title="Sentiment Analysis")
-st.title('Sentiment Analysis App Titipku')
+st.set_page_config(page_title="Sentiment Analysis App")
+st.title('Sentiment Analysis App')
 
-url = "https://scrapping-app-review.streamlit.app/"
-st.write("Follow this [link](%s) to scrapping dataset" % url)
+url = "https://scraping-app-reviews.streamlit.app/"
+st.write("Follow this [link](%s) to scraping dataset" % url)
 
 upload_file = st.file_uploader("Upload a CSV File", type="csv")
-added_stopwords = st.text_input("Enter Add Stopword (comma-separated)")
+added_stopwords = st.text_input("Enter Add Stopword (comma-separated) Optional")
 added_stopword_list = [word.strip() for word in added_stopwords.split(",")] if added_stopwords else []
 
 if upload_file is not None:
@@ -41,12 +41,12 @@ if upload_file is not None:
 
         stop_factory = StopWordRemoverFactory()
         more_stopword = ['byk', 'dg', 'yg', 'tdk', 'gak', 'sy', 'ga', 'nya', 'lg', 'jd', 'bs', 'dr']
-        stopwords_indonesian = stop_factory.get_stop_words() + more_stopword
+        stopwords_indonesian = stop_factory.get_stop_words() + more_stopword + added_stopword_list
 
-        st.success(f"Sentiment Analysis performed on column: {target_variable}")
+        st.write(f"Sentiment Analysis Performed on column: {target_variable}")
         
         df = df.dropna(how='any',axis=0)
-        st.write(f"Selected {target_variable} Column:")
+        st.write(f"Selected **{target_variable}** Column:")
         st.dataframe(df[[target_variable]])
 
         new_df = df.copy()
@@ -84,31 +84,35 @@ if upload_file is not None:
         st.subheader("Sentiment Analysis Results:")
         st.dataframe(data)
 
-        sentiment_counts = data['label'].value_counts()
-
         # Plot a distribution
+        sentiment_counts = data['label'].value_counts()
+        
+        st.subheader('Sentiment Distribution')
         st.set_option('deprecation.showPyplotGlobalUse', False)
         sns.set(style="whitegrid")
         plt.figure(figsize=(8, 6))
         sns.barplot(x=sentiment_counts.index, y=sentiment_counts.values, palette="viridis")
-        plt.title('Sentiment Distribution')
         plt.xlabel('Sentiment Label')
         plt.ylabel('Count')
         st.pyplot()
-
-        data['label'].value_counts().sort_index() \
-        .plot(kind='pie', autopct='%1.1f%%', title='Percentage Label Reviews')
+        
+        st.subheader('Sentiment Percentage')
+        st.set_option('deprecation.showPyplotGlobalUse', False)
+        sns.set(style="whitegrid")
+        palette = sns.color_palette("tab10", len(sentiment_counts))
+        plt.figure(figsize=(6, 4))
+        plt.pie(sentiment_counts.values, labels=sentiment_counts.index, colors=palette, autopct='%1.1f%%')
         st.pyplot()
-
-        negative_reviews = data[data['label']=='Negative']
-        negative_reviews_sorted = negative_reviews.sort_values(by='score', ascending=False).head(10)
-        st.write('Top 10 Negative Review')
-        st.dataframe(negative_reviews_sorted)
 
         positive_reviews = data[data['label']=='Positive']
         positive_reviews_sorted = positive_reviews.sort_values(by='score', ascending=False).head(10)
-        st.write('Top 10 Positive Review')
+        st.subheader('Top 10 Positive Review')
         st.dataframe(positive_reviews_sorted)
+
+        negative_reviews = data[data['label']=='Negative']
+        negative_reviews_sorted = negative_reviews.sort_values(by='score', ascending=False).head(10)
+        st.subheader('Top 10 Negative Review')
+        st.dataframe(negative_reviews_sorted)
 
         sentiment_text = {
             "Positive": "",
@@ -162,3 +166,15 @@ if upload_file is not None:
         # Display the saved WordCloud image using Streamlit
         st.subheader("WordCloud For Neutral Sentiment")
         st.image(neutral_wordcloud_filename)
+
+        st.markdown("***")
+
+        datas = data.to_csv(index=False).encode("utf-8")
+
+        st.download_button(
+            label="Download data as CSV",
+            data=datas,
+            file_name="sentiment_analysis.csv",
+            mime="text/csv",
+        )
+

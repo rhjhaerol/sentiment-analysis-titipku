@@ -43,7 +43,9 @@ if st.button('Scraping Google Playstore Review'):
         st.write(f'Counts of Google Playstore Review : {countg}')
         st.success('Data scraped successfully')
 
-        datasg = g_df2.to_csv(index=False).encode("utf-8")
+        data1 = g_df2[['source','user_name', 'review_description','review_date','rating']]
+
+        datasg = data1.to_csv(index=False).encode("utf-8")
 
         st.download_button(
             label="Download data as CSV",
@@ -89,7 +91,9 @@ if st.button('Scraping App Store Review'):
         st.write(f'Counts of Apple Appstore Review : {counta}')
         st.success('Data scraped successfully')
 
-        datasa = a_df2.to_csv(index=False).encode("utf-8")
+        data2 = a_df2[['source','user_name', 'review_description','review_date','rating']]
+
+        datasa = data2.to_csv(index=False).encode("utf-8")
         
         st.download_button(
             label="Download data as CSV",
@@ -161,7 +165,9 @@ if st.button('Scraping All Review'):
         st.write(f'Counts of Total Review : {count}')
         st.success('Data scraped successfully')
 
-        datas = final_result.to_csv(index=False).encode("utf-8")
+        data3 = final_result[['source','user_name', 'review_description','review_date','rating']]
+
+        datas = data3.to_csv(index=False).encode("utf-8")
 
         st.download_button(
             label="Download data as CSV",

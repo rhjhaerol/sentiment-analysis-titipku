@@ -152,8 +152,7 @@ if st.button('Scraping All Review'):
         count2 = len(a_df2)
         st.write(f'Counts of Apple Appstore Review : {count2}')
 
-        result = pd.concat([g_df2,a_df2]).reset_index()
-        final_result = result[['source','user_name','review_description','review_date','rating']]
+        final_result = pd.concat([g_df2,a_df2]).reset_index()
 
         st.subheader("Final Review")
         st.dataframe(final_result)

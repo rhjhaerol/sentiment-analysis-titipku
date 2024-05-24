@@ -42,6 +42,7 @@ if upload_file is not None:
         stop_factory = StopWordRemoverFactory()
         more_stopword = ['byk', 'dg', 'yg', 'tdk', 'gak', 'sy', 'ga', 'nya', 'lg', 'jd', 'bs', 'dr']
         stopwords_indonesian = stop_factory.get_stop_words() + more_stopword + added_stopword_list
+        stopwords_indonesian.remove('tidak')
 
         st.write(f"Sentiment Analysis Performed on column: {target_variable}")
         
@@ -70,7 +71,7 @@ if upload_file is not None:
         sentiment_classifier = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
         label_index = {'LABEL_0': 'Positive', 'LABEL_1': 'Neutral', 'LABEL_2': 'Negative'}
         
-        new_df['cleaned_text'] = df.apply(lambda x: clean_review(x[target_variable]), axis=1)
+        new_df['cleaned_text'] = new_df.apply(lambda x: clean_review(x[target_variable]), axis=1)
 
         data = (
             new_df

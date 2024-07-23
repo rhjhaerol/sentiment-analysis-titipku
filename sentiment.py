@@ -40,15 +40,107 @@ if upload_file is not None:
         stemmer = factory.create_stemmer()
 
         stop_factory = StopWordRemoverFactory()
-        more_stopword = ['byk', 'dg', 'yg', 'tdk', 'gak', 'sy', 'ga', 'nya', 'lg', 'jd', 'bs', 'dr']
-        stopwords_indonesian = stop_factory.get_stop_words() + more_stopword + added_stopword_list
-        stopwords_indonesian.remove('tidak')
+        reduce_word = ['tidak']
+        stopwords_indonesian = stop_factory.get_stop_words() + ['titipku']
+        stopwords_indonesian = list(filter(lambda x:x not in reduce_word, stopwords_indonesian))
 
         st.write(f"Sentiment Analysis Performed on column: {target_variable}")
+        replacements = {
+            'yg': 'yang',
+            'dgn': 'dengan',
+            'jd': 'jadi',
+            'tdk': 'tidak',
+            'ga': 'tidak',
+            'mager': 'malas',
+            'gua': 'aku',
+            'nggak': 'tidak',
+            'dlm': 'dalam',
+            'utk': 'untuk',
+            'trs': 'terus',
+            'trus': 'terus',
+            'kyk': 'seperti',
+            'bgt': 'banget',
+            'apk': 'aplikasi',
+            'krna': 'karena',
+            'byk': 'banyak',
+            'knp': 'kenapa',
+            'sm': 'sama',
+            'tmn': 'teman',
+            'brg': 'barang',
+            'dr': 'dari',
+            'sy': 'saya',
+            'kl': 'kalau',
+            'brp': 'berapa',
+            'bsk': 'besok',
+            'udh': 'sudah',
+            'blm': 'belum',
+            'cmn': 'cuman',
+            'td': 'tadi',
+            'kpn': 'kapan',
+            'spt': 'seperti',
+            'bljr': 'belajar',
+            'skrg': 'sekarang',
+            'org': 'orang',
+            'lh': 'lah',
+            'gt': 'gitu',
+            'trs': 'terus',
+            'bkn': 'bukan',
+            'jg': 'juga',
+            'mn': 'mana',
+            'bbrp': 'beberapa',
+            'sj': 'saja',
+            'skr': 'sekarang',
+            'blg': 'bilang',
+            'mnt': 'minta',
+            'gmna': 'gimana',
+            'plg': 'paling',
+            'krn': 'karena',
+            'sbg': 'sebagai',
+            'bs': 'bisa',
+            'smg': 'semoga',
+            'lbh': 'lebih',
+            'dpn': 'depan',
+            'tlg': 'tolong',
+            'pd': 'pada',
+            'hrs': 'harus',
+            'lgs': 'langsung',
+            'ptg': 'penting',
+            'ank': 'anak',
+            'sm2': 'sama-sama',
+            'smua': 'semua',
+            'ngga': 'tidak',
+            'bgt': 'banget',
+            'gpp': 'tidak apa-apa',
+            'ny': 'nya',
+            'dl': 'dulu',
+            'ad': 'ada',
+            'aj': 'aja',
+            'jgn': 'jangan',
+            'dri': 'dari',
+            'mkn': 'makan',
+            'n': 'dan',
+            'bnr': 'benar',
+            'ntar': 'nanti',
+            'ak': 'aku',
+            'y': 'ya',
+            'ngapain': 'mengapa',
+            'buat': 'untuk',
+            'sgt': 'sangat',
+            'gak': 'tidak',
+            'dtg': 'datang'
+        }
+
+        def replace_words(text, replacements):
+            for old, new in replacements.items():
+                text = re.sub(r'\b' + re.escape(old) + r'\b', new, text)
+            return text
+            
+        df[target_variable] = df[target_variable].apply(lambda x: replace_words(x, replacements))
         
         df = df.dropna(how='any',axis=0)
         st.write(f"Selected **{target_variable}** Column:")
         st.dataframe(df[[target_variable]])
+        
 
         new_df = df.copy()
 
@@ -106,12 +198,12 @@ if upload_file is not None:
         st.pyplot()
 
         positive_reviews = data[data['label']=='Positive']
-        positive_reviews_sorted = positive_reviews.sort_values(by='score', ascending=False).head(10)
+        positive_reviews_sorted = positive_reviews.sort_values(by=['score', 'review_date'], ascending=False).head(10)
         st.subheader('Top 10 Positive Review')
         st.dataframe(positive_reviews_sorted)
 
         negative_reviews = data[data['label']=='Negative']
-        negative_reviews_sorted = negative_reviews.sort_values(by='score', ascending=False).head(10)
+        negative_reviews_sorted = negative_reviews.sort_values(by=['score', 'review_date'], ascending=False).head(10)
         st.subheader('Top 10 Negative Review')
         st.dataframe(negative_reviews_sorted)
 
